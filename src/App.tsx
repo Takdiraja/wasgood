@@ -265,6 +265,33 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCapturing, isFrozen, isMobileLayout]);
 
+  // Handle global paste event for clipboard screenshots (Ctrl + V)
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          const file = items[i].getAsFile();
+          if (file) {
+            // Automatically switch to file upload tab
+            setInputTab('file');
+            // Upload the photo
+            handlePhotoUpload(file);
+            
+            // Prevent default browser paste behavior
+            e.preventDefault();
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('paste', handlePaste);
+    return () => window.removeEventListener('paste', handlePaste);
+  }, []);
+
   const forceTriggerQuestion = (color: ColorType) => {
     if (inputTabRef.current === 'file') return;
     if (internalStateRef.current === 'IDLE' && !isFrozenRef.current && inputTab !== 'file') return;
