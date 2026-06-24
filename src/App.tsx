@@ -39,8 +39,8 @@ export default function App() {
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
   
   // ROI States (for visual indicators & numeric sliders)
-  const [boardRoi, setBoardRoi] = useState<ROI>({ x: 25, y: 15, width: 50, height: 60 });
-  const [questionRoi, setQuestionRoi] = useState<ROI>({ x: 30, y: 80, width: 40, height: 10 });
+  const [boardRoi, setBoardRoi] = useState<ROI>({ x: 50, y: 10, width: 40, height: 80 });
+  const [questionRoi, setQuestionRoi] = useState<ROI>({ x: 71, y: 13, width: 19, height: 6 });
   
   // Mobile Layout Overlay State
   const [isMobileLayout, setIsMobileLayout] = useState(false);
@@ -124,8 +124,8 @@ export default function App() {
 
   // Save/restore ROI states when switching between file upload and other inputs
   const prevInputTabRef = useRef<'screen' | 'camera' | 'file'>(inputTab);
-  const nonFileBoardRoiRef = useRef<ROI>({ x: 25, y: 15, width: 50, height: 60 });
-  const nonFileQuestionRoiRef = useRef<ROI>({ x: 30, y: 80, width: 40, height: 10 });
+  const nonFileBoardRoiRef = useRef<ROI>({ x: 50, y: 10, width: 40, height: 80 });
+  const nonFileQuestionRoiRef = useRef<ROI>({ x: 71, y: 13, width: 19, height: 6 });
 
   useEffect(() => {
     const prevTab = prevInputTabRef.current;
@@ -844,8 +844,8 @@ export default function App() {
   // Presets
   const applyPresetRoi = (preset: 'standard' | 'centered-large' | 'bottom-centered') => {
     if (preset === 'standard') {
-      setBoardRoi({ x: 25, y: 15, width: 50, height: 60 });
-      setQuestionRoi({ x: 30, y: 80, width: 40, height: 10 });
+      setBoardRoi({ x: 50, y: 10, width: 40, height: 80 });
+      setQuestionRoi({ x: 71, y: 13, width: 19, height: 6 });
     } else if (preset === 'centered-large') {
       setBoardRoi({ x: 20, y: 10, width: 60, height: 70 });
       setQuestionRoi({ x: 25, y: 82, width: 50, height: 12 });
