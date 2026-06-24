@@ -81,6 +81,7 @@ export default function App() {
   const isFrozenRef = useRef<boolean>(isFrozen);
   const inputTabRef = useRef<'screen' | 'camera' | 'file'>(inputTab);
   const guideSizeRef = useRef<number>(guideSize);
+  const isMobileLayoutRef = useRef<boolean>(isMobileLayout);
   
   // Mutable Refs for State Machine logic
   const internalStateRef = useRef<AppState>('IDLE');
@@ -121,6 +122,7 @@ export default function App() {
   useEffect(() => { isFrozenRef.current = isFrozen; }, [isFrozen]);
   useEffect(() => { inputTabRef.current = inputTab; }, [inputTab]);
   useEffect(() => { guideSizeRef.current = guideSize; }, [guideSize]);
+  useEffect(() => { isMobileLayoutRef.current = isMobileLayout; }, [isMobileLayout]);
 
   // Save/restore ROI states when switching between file upload and other inputs
   const prevInputTabRef = useRef<'screen' | 'camera' | 'file'>(inputTab);
@@ -403,24 +405,26 @@ export default function App() {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
 
-      // Recalculate guide box to maintain perfect square coordinates relative to new canvas aspect ratio
-      const S = Math.min(canvas.width, canvas.height);
-      const pixelSize = (guideSizeRef.current / 100) * S;
-      const bW = (pixelSize / canvas.width) * 100;
-      const bH = (pixelSize / canvas.height) * 100;
-      const bX = Math.round(50 - bW / 2);
-      const bY = Math.round(40 - bH / 2);
+      if (isMobileLayoutRef.current) {
+        // Recalculate guide box to maintain perfect square coordinates relative to new canvas aspect ratio
+        const S = Math.min(canvas.width, canvas.height);
+        const pixelSize = (guideSizeRef.current / 100) * S;
+        const bW = (pixelSize / canvas.width) * 100;
+        const bH = (pixelSize / canvas.height) * 100;
+        const bX = Math.round(50 - bW / 2);
+        const bY = Math.round(40 - bH / 2);
 
-      const newBoardRoi = { x: bX, y: bY, width: bW, height: bH };
-      const newQuestionRoi = { x: bX, y: bY + bH + 3, width: bW, height: 8 };
+        const newBoardRoi = { x: bX, y: bY, width: bW, height: bH };
+        const newQuestionRoi = { x: bX, y: bY + bH + 3, width: bW, height: 8 };
 
-      boardRoiRef.current = newBoardRoi;
-      questionRoiRef.current = newQuestionRoi;
+        boardRoiRef.current = newBoardRoi;
+        questionRoiRef.current = newQuestionRoi;
 
-      setTimeout(() => {
-        setBoardRoi(newBoardRoi);
-        setQuestionRoi(newQuestionRoi);
-      }, 0);
+        setTimeout(() => {
+          setBoardRoi(newBoardRoi);
+          setQuestionRoi(newQuestionRoi);
+        }, 0);
+      }
     }
 
     // 1. Draw video frame to canvas
